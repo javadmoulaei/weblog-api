@@ -11,16 +11,12 @@ const { authenticated } = require("../middleware/auth");
 
 const router = new Router();
 
-router.get("/login", login.get);
 router.post("/login", login.post, remember.post);
 
-router.get("/register", register.get);
 router.post("/register", register.post);
 
-router.get("/forget-password", forgetPass.get);
 router.post("/forget-password", forgetPass.post);
 
-router.get("/reset-password/:token", resetPass.get);
 router.post("/reset-password/:id", resetPass.post);
 
 router.get("/logout", authenticated, logout.get);

@@ -7,9 +7,7 @@ const contact = require("../controllers/contact");
 
 router.get("/", blog.get);
 router.get("/posts/:id", blog.getOne);
-router.post("/search", blog.search);
 
-router.get("/contact", contact.get);
 router.post("/contact", contact.post);
 
 router.get("/captcha.png", contact.getCaptcha);

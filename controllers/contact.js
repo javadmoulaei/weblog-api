@@ -5,16 +5,6 @@ const { sendEmail } = require("../utils/mailer");
 
 let CAPTCHA_NUM;
 
-exports.get = (req, res) => {
-  res.render("contact", {
-    pageTitle: "تماس با ما",
-    path: "/contact",
-    message: req.flash("success_msg"),
-    error: req.flash("error"),
-    errors: [],
-  });
-};
-
 exports.post = async (req, res) => {
   const errorArr = [];
 

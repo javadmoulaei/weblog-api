@@ -2,15 +2,6 @@ const jwt = require("jsonwebtoken");
 
 const User = require("../../models/User");
 
-exports.get = async (req, res) => {
-  res.render("forgetPass", {
-    pageTitle: "فراموشی رمز عبور",
-    path: "/login",
-    message: req.flash("success_msg"),
-    error: req.flash("error"),
-  });
-};
-
 exports.post = async (req, res) => {
   const { email } = req.body;
 

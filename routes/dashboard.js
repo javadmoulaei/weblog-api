@@ -6,14 +6,9 @@ const dashboard = require("./../controllers/admin/dashboard");
 const posts = require("./../controllers/admin/posts");
 const upload = require("./../controllers/admin/upload");
 
-router.get("/", dashboard.get);
-
-router.get("/add-post", posts.addPostPage);
 router.post("/posts", posts.post);
-router.get("/edit-post/:id", posts.editPostPage);
-router.post("/edit-post/:id", posts.editPost);
-router.get("/delete-post/:id", posts.delete);
-router.post("/search", posts.search);
+router.put("/posts/:id", posts.editPost);
+router.delete("/posts-post/:id", posts.delete);
 
 router.post("/image-upload", upload.image);
 module.exports = router;

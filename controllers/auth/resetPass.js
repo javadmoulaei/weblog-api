@@ -2,28 +2,6 @@ const jwt = require("jsonwebtoken");
 
 const User = require("../../models/User");
 
-exports.get = async (req, res) => {
-  const token = req.params.token;
-
-  let decodedToken;
-
-  try {
-    decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-  } catch (err) {
-    if (!decodedToken) {
-      return res.redirect("/404");
-    }
-  }
-
-  res.render("resetPass", {
-    pageTitle: "تغییر پسورد",
-    path: "/login",
-    message: req.flash("success_msg"),
-    error: req.flash("error"),
-    userId: decodedToken.userId,
-  });
-};
-
 exports.post = async (req, res) => {
   const { password, confirmPassword } = req.body;
 

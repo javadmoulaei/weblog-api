@@ -7,18 +7,6 @@ const { shamsiDate } = require("../../utils/jalali");
 const { get500 } = require("../errors");
 
 // create post
-exports.addPostPage = (req, res) => {
-  try {
-    res.render("private/addPost", {
-      pageTitle: "ایجاد پست",
-      path: "/dashboard/add-post",
-      layout: "./layouts/dashboard",
-      fullname: req.user.fullname,
-    });
-  } catch (error) {
-    get500(req, res, error);
-  }
-};
 
 exports.post = async (req, res) => {
   const errors = [];
@@ -63,25 +51,6 @@ exports.post = async (req, res) => {
 };
 
 //edit posts
-exports.editPostPage = async (req, res) => {
-  try {
-    const post = await Blog.findById(req.params.id);
-
-    if (!post) return res.render("errors/404");
-
-    if (post.user.toString() != req.user._id) return res.redirect("/dashboard");
-
-    res.render("private/editPost", {
-      pageTitle: "ویرایش پست",
-      path: "/dashboard/edit-post",
-      layout: "./layouts/dashboard",
-      fullname: req.user.fullname,
-      post,
-    });
-  } catch (error) {
-    get500(req, res, error);
-  }
-};
 
 exports.editPost = async (req, res) => {
   const errors = [];
@@ -149,41 +118,6 @@ exports.delete = async (req, res) => {
 
     return res.redirect("/dashboard");
   } catch (error) {
-    get500(req, res, error);
-  }
-};
-
-exports.search = async (req, res) => {
-  const page = +req.query.page || 1;
-  const limit = 2;
-
-  try {
-    const numberOfPosts = await Blog.find({
-      user: req.user._id,
-      $text: { $search: req.body.search },
-    }).countDocuments();
-    const blogs = await Blog.find({
-      user: req.user.id,
-      $text: { $search: req.body.search },
-    })
-      .skip((page - 1) * limit)
-      .limit(limit);
-
-    res.render("private/blogs", {
-      pageTitle: "بخش مدیریت | داشبورد",
-      path: "/dashboard",
-      layout: "./layouts/dashboard",
-      fullname: req.user.fullname,
-      blogs,
-      shamsiDate,
-      page,
-      nextPage: page + 1,
-      previousPage: page - 1,
-      hasNextPage: limit * page < numberOfPosts,
-      hasPreviousPage: page > 1,
-      lastPage: Math.ceil(numberOfPosts / limit),
-    });
-  } catch (err) {
     get500(req, res, error);
   }
 };
