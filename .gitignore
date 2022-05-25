@@ -1,0 +1,6 @@
+/config/config.env
+package-lock.json
+/node_modules
+/logs/*.log
+/public/uploads/*.jpeg
+/public/uploads/thumbnails/*.jpeg
