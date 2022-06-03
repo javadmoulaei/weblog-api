@@ -1,6 +1,5 @@
 const multer = require("multer");
 const sharp = require("sharp");
-const { error } = require("winston");
 const uuid = require("uuid").v4;
 
 const { fileFilter, storage } = require("../../utils/multer");

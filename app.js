@@ -3,8 +3,6 @@ const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
-const morgan = require("morgan");
-const flash = require("connect-flash");
 const session = require("express-session");
 const passport = require("passport");
 const MongoStore = require("connect-mongo");
@@ -37,8 +35,6 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
-
-app.use(flash());
 
 app.use(express.static(path.join(__dirname, "public")));
 

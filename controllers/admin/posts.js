@@ -3,7 +3,6 @@ const uuid = require("uuid").v4;
 const appRoot = require("app-root-path");
 const sharp = require("sharp");
 const Blog = require("../../models/Blog");
-const { shamsiDate } = require("../../utils/jalali");
 const { get500 } = require("../errors");
 
 // create post

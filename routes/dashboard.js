@@ -2,7 +2,6 @@ const { Router } = require("express");
 
 const router = new Router();
 
-const dashboard = require("./../controllers/admin/dashboard");
 const posts = require("./../controllers/admin/posts");
 const upload = require("./../controllers/admin/upload");
 
