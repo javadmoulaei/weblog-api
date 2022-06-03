@@ -29,9 +29,8 @@ exports.post = async (req, res) => {
       thumbnail: fileName,
     });
 
-    res.redirect("/dashboard");
+    res.status(200).json({});
   } catch (error) {
-    console.log(error);
     error.inner.forEach((element) => {
       errors.push({
         name: element.path,
@@ -39,13 +38,7 @@ exports.post = async (req, res) => {
       });
     });
 
-    return res.render("private/addPost", {
-      pageTitle: "ایجاد پست",
-      path: "/dashboard/add-post",
-      layout: "./layouts/dashboard",
-      fullname: req.user.fullname,
-      errors,
-    });
+    return res.status(400).json({ errors });
   }
 };
 
@@ -56,9 +49,10 @@ exports.editPost = async (req, res) => {
   try {
     const post = await Blog.findById(req.params.id);
 
-    if (!post) return res.render("errors/404");
+    if (!post) return res.status(404).json("404");
 
-    if (post.user.toString() != req.user._id) return res.redirect("/dashboard");
+    if (post.user.toString() != req.user._id)
+      return res.status(403).json("403");
 
     const thumbnail = req.files ? req.files.thumbnail : {};
     const fileName = `${uuid()}${thumbnail.name}`;
@@ -83,9 +77,8 @@ exports.editPost = async (req, res) => {
 
     await Blog.updateOne({ _id: post._id }, { ...req.body });
 
-    res.redirect("/dashboard");
+    res.status(200).json({});
   } catch (error) {
-    console.log(error);
     error.inner.forEach((element) => {
       errors.push({
         name: element.path,
@@ -93,14 +86,7 @@ exports.editPost = async (req, res) => {
       });
     });
 
-    res.render("private/editPost", {
-      pageTitle: "ویرایش پست",
-      path: "/dashboard/edit-post",
-      layout: "./layouts/dashboard",
-      fullname: req.user.fullname,
-      errors,
-      post: await Blog.findById(req.params.id),
-    });
+    return res.status(400).json({ errors });
   }
 };
 
@@ -109,13 +95,14 @@ exports.delete = async (req, res) => {
   try {
     const post = await Blog.findById(req.params.id);
 
-    if (!post) return res.render("errors/404");
+    if (!post) return res.status(404).json("404");
 
-    if (post.user.toString() != req.user._id) return res.redirect("/dashboard");
+    if (post.user.toString() != req.user._id)
+      return res.status(403).json("403");
 
     await Blog.findByIdAndDelete(req.params.id);
 
-    return res.redirect("/dashboard");
+    return res.status(200).json({});
   } catch (error) {
     get500(req, res, error);
   }

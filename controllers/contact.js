@@ -8,29 +8,21 @@ let CAPTCHA_NUM;
 exports.post = async (req, res) => {
   const errorArr = [];
 
-  const { fullname, email, message, captcha } = req.body;
+  const { fullname, email, message } = req.body;
 
   try {
     await schema.validate(req.body, { abortEarly: false });
 
-    if (+captcha === CAPTCHA_NUM) {
-      sendEmail(
-        email,
-        fullname,
-        "پیام از طرف وبلاگ",
-        `${message} <br/> ایمیل کاربر : ${email}`
-      );
+    sendEmail(
+      email,
+      fullname,
+      "پیام از طرف وبلاگ",
+      `${message} <br/> ایمیل کاربر : ${email}`
+    );
 
-      req.flash("success_msg", "پیام شما با موفقیت ارسال شد");
-    } else req.flash("error", "کد امنیتی درست نمیباشد.");
+    req.flash("success_msg", "پیام شما با موفقیت ارسال شد");
 
-    res.render("contact", {
-      pageTitle: "تماس با ما",
-      path: "/contact",
-      message: req.flash("success_msg"),
-      error: req.flash("error"),
-      errors: errorArr,
-    });
+    res.status(200).json({ message: "پیام شما با موفقیت ارسال شد" });
   } catch (err) {
     err.inner.forEach((e) => {
       errorArr.push({
@@ -38,13 +30,7 @@ exports.post = async (req, res) => {
         message: e.message,
       });
     });
-    res.render("contact", {
-      pageTitle: "تماس با ما",
-      path: "/contact",
-      message: req.flash("success_msg"),
-      error: req.flash("error"),
-      errors: errorArr,
-    });
+    res.status(422).json({ error: errorArr });
   }
 };
 
