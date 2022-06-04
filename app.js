@@ -9,6 +9,7 @@ const MongoStore = require("connect-mongo");
 const fileUpload = require("express-fileupload");
 
 const connectDB = require("./config/db");
+const { errorHandler } = require("./middleware/errors");
 
 dotenv.config({ path: "./config/config.env" });
 
@@ -39,6 +40,8 @@ app.use(passport.session());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", require("./routes"));
+
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
