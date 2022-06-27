@@ -3,29 +3,29 @@ const jwt = require("jsonwebtoken");
 const User = require("../../models/User");
 
 exports.post = async (req, res) => {
-  const { password, confirmPassword } = req.body;
+  try {
+    const { password, confirmPassword } = req.body;
+    const { id } = req.params;
 
-  if (password !== confirmPassword) {
-    req.flash("error", "کلمه های عبور یاکسان نیستند");
+    const decodedToken = jwt.verify(id, process.env.JWT_SECRET);
 
-    return res.render("resetPass", {
-      pageTitle: "تغییر پسورد",
-      path: "/login",
-      message: req.flash("success_msg"),
-      error: req.flash("error"),
-      userId: req.params.id,
-    });
+    if (!decodedToken)
+      return res.status(403).send({ message: "دسترسی ندارید" });
+
+    if (password !== confirmPassword)
+      return res
+        .status(400)
+        .send({ message: "کلمه عبور با تایید کلمه عبور یکسان نیستند" });
+
+    const user = await User.findOne({ _id: decodedToken.userId });
+
+    if (!user) return res.status(403).send({ message: "دسترسی ندارید" });
+
+    user.password = password;
+    await user.save();
+
+    res.send({ message: "پسورد آپدیت شد" });
+  } catch (error) {
+    res.status(500).send({ message: "ارور از سمت سرور" });
   }
-
-  const user = await User.findOne({ _id: req.params.id });
-
-  if (!user) {
-    return res.redirect("/404");
-  }
-
-  user.password = password;
-  await user.save();
-
-  req.flash("success_msg", "پسورد شما با موفقیت بروزرسانی شد");
-  res.redirect("/auth/login");
 };
