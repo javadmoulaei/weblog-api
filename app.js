@@ -3,9 +3,6 @@ const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
-const session = require("express-session");
-const passport = require("passport");
-const MongoStore = require("connect-mongo");
 const fileUpload = require("express-fileupload");
 
 const connectDB = require("./config/db");
@@ -16,8 +13,6 @@ dotenv.config({ path: "./config/config.env" });
 
 connectDB();
 
-require("./config/passport");
-
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -25,19 +20,6 @@ app.use(bodyParser.json());
 app.use(setHeaders);
 
 app.use(fileUpload());
-
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    unset: "destroy",
-    store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
-  })
-);
-
-app.use(passport.initialize());
-app.use(passport.session());
 
 app.use(express.static(path.join(__dirname, "public")));
 
