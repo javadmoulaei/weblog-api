@@ -17,8 +17,8 @@ exports.image = (req, res) => {
     upload(req, res, async (err) => {
       if (err) {
         if (err.code === "LOMIT_FILE_SIZE")
-          return res.status(400).send("حجم عکس نباید بیش از ۴ مگابایت باشد");
-        res.status(400).send(err);
+          return res.status(400).json("حجم عکس نباید بیش از ۴ مگابایت باشد");
+        res.status(400).json(err);
       } else if (req.files) {
         const fileName = `${uuid()}${req.files.image.name}`;
 
@@ -29,8 +29,8 @@ exports.image = (req, res) => {
           .toFile(`./public/uploads/${fileName}`)
           .catch((error) => get500(req, res, error));
 
-        res.status(200).send(`${process.env.URL}/uploads/${fileName}`);
-      } else res.send("باید یه عکس انتخاب کنید");
+        res.status(200).json(`${process.env.URL}/uploads/${fileName}`);
+      } else res.json("باید یه عکس انتخاب کنید");
     });
   } catch (error) {
     get500(req, res, error);
